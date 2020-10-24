@@ -14,10 +14,10 @@ public class CounterRepository {
         this.bucket = bucket;
     }
 
-    public String incrementCommunicationCounter() {
+    public long incrementCommunicationCounter() {
         return bucket.defaultCollection()
                 .binary()
                 .increment(DocumentCounter.COMMUNICATION_COUNTER.getCounterName())
-                .toString();
+                .content();
     }
 }

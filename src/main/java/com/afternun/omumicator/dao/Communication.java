@@ -2,15 +2,15 @@ package com.afternun.omumicator.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.Field;
 
-import java.time.LocalDateTime;
-
 @Document
 @Builder
 @AllArgsConstructor
+@Getter
 public class Communication {
     @Id
     private String id;
@@ -23,9 +23,6 @@ public class Communication {
 
     @Field
     private String startTime;
-
-    @Field
-    private String finishTime;
 
     @Field
     private String publicKey;
