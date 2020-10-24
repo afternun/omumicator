@@ -1,0 +1,5 @@
+couchbase:
+  user: 'afternun'
+  bucket: 'afternun'
+  password: 'afternun'
+  url: '127.0.0.1'
