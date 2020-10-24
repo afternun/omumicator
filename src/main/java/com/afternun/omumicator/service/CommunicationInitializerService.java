@@ -2,6 +2,7 @@ package com.afternun.omumicator.service;
 
 import com.afternun.omumicator.dao.Communication;
 import com.afternun.omumicator.exception.KeysNotMatchedException;
+import com.afternun.omumicator.exception.NoSuchCommunicationException;
 import com.afternun.omumicator.helper.IdHelper;
 import com.afternun.omumicator.model.CommunicationModel;
 import com.afternun.omumicator.model.KeyPairModel;
@@ -44,8 +45,7 @@ public class CommunicationInitializerService {
     }
 
     public String connectCommunication(CommunicationModel communicationModel) throws InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        Communication communication = Optional.of(communicationRepository.findById(IdHelper.generateCommunicationId(communicationModel.getId())))
-                .get().orElseThrow(() -> new RuntimeException("NO SUCH DOCUMENT EXCEPTION"));
+        Communication communication = getCommunication(communicationModel.getId());
 
         if(privatePublicKeyService.areKeysMatching(new KeyPairModel(communication.getPublicKey(), communicationModel.getKey()))) {
             return "Good job! You can start texting!";
@@ -55,8 +55,7 @@ public class CommunicationInitializerService {
     }
 
     public String killCommunication(CommunicationModel communicationModel) {
-        Communication communication = Optional.of(communicationRepository.findById(IdHelper.generateCommunicationId(communicationModel.getId())))
-                .get().orElseThrow(() -> new RuntimeException("NO SUCH DOCUMENT EXCEPTION"));
+        Communication communication = getCommunication(communicationModel.getId());
         try {
             if(privatePublicKeyService.areKeysMatching(new KeyPairModel(communication.getPublicKey(), communicationModel.getKey()))) {
                 communicationRepository.deleteById(IdHelper.generateCommunicationId(communicationModel.getId()));
@@ -67,5 +66,10 @@ public class CommunicationInitializerService {
         }
 
         return "SHAME";
+    }
+
+    private Communication getCommunication(long id) {
+        return Optional.of(communicationRepository.findById(IdHelper.generateCommunicationId(id)))
+                .get().orElseThrow(() -> new NoSuchCommunicationException(id));
     }
 }
